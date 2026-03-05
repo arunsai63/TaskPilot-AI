@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
 import { Play, Square, Clock } from 'lucide-react'
 import { useApp } from '../../context/AppContext'
 import { formatDuration, getDayKey } from '../../utils/format'
@@ -83,29 +84,37 @@ export default function FocusSession() {
         )}
       </div>
 
-      {!running && (
-        <div className="card card-sm">
-          <div className="section-label" style={{ marginBottom: 12 }}>Session Setup</div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-            <input
-              className="input"
-              value={label}
-              onChange={e => setLabel(e.target.value)}
-              placeholder="Session label..."
-            />
-            <select className="input" value={selectedTaskId} onChange={e => setSelectedTaskId(e.target.value)}>
-              <option value="">No task linked</option>
-              {todoTasks.map(t => <option key={t.id} value={t.id}>{t.title}</option>)}
-            </select>
-            <input
-              className="input"
-              value={goal}
-              onChange={e => setGoal(e.target.value)}
-              placeholder="Session goal (optional)..."
-            />
-          </div>
-        </div>
-      )}
+      <AnimatePresence>
+        {!running && (
+          <motion.div
+            className="card card-sm"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.18, ease: [0.25, 0.46, 0.45, 0.94] }}
+          >
+            <div className="section-label" style={{ marginBottom: 12 }}>Session Setup</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              <input
+                className="input"
+                value={label}
+                onChange={e => setLabel(e.target.value)}
+                placeholder="Session label..."
+              />
+              <select className="input" value={selectedTaskId} onChange={e => setSelectedTaskId(e.target.value)}>
+                <option value="">No task linked</option>
+                {todoTasks.map(t => <option key={t.id} value={t.id}>{t.title}</option>)}
+              </select>
+              <input
+                className="input"
+                value={goal}
+                onChange={e => setGoal(e.target.value)}
+                placeholder="Session goal (optional)..."
+              />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <div style={{ display: 'flex', gap: 10 }}>
         {!running ? (

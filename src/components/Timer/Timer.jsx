@@ -167,35 +167,40 @@ export default function Timer() {
       : 0)
 
   return (
-    <div style={{ position: 'relative', width: '100%' }}>
-      {/* Settings trigger — floating top-right */}
-      <button
-        className="btn btn-ghost btn-icon"
-        style={{ position: 'absolute', top: 0, right: 0 }}
-        onClick={() => setShowSettings(true)}
-      >
-        <Settings size={16} />
-      </button>
-
+    <div style={{ width: '100%' }}>
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 24, paddingTop: 8 }}>
-        {/* Mode tabs */}
-        <div className="mode-tabs" style={{ maxWidth: 400, width: '100%' }}>
-          {MODES.map((m, i) => (
-            <button
-              key={m.key}
-              className={`mode-tab ${i === modeIdx ? 'active' : ''}`}
-              style={i === modeIdx ? { color: m.color } : {}}
-              onClick={() => switchMode(i)}
-            >
-              {m.label}
-            </button>
-          ))}
+        {/* Mode tabs + settings in one row */}
+        <div style={{ display: 'flex', alignItems: 'stretch', maxWidth: 400, width: '100%' }}>
+          <div className="mode-tabs" role="tablist" style={{ flex: 1 }}>
+            {MODES.map((m, i) => (
+              <button
+                key={m.key}
+                role="tab"
+                aria-selected={i === modeIdx}
+                className={`mode-tab ${i === modeIdx ? 'active' : ''}`}
+                style={i === modeIdx ? { color: m.color } : {}}
+                onClick={() => switchMode(i)}
+              >
+                {m.label}
+              </button>
+            ))}
+          </div>
+          <button
+            className="btn btn-ghost btn-icon"
+            aria-label="Timer settings"
+            style={{ flexShrink: 0, alignSelf: 'center', marginLeft: 4 }}
+            onClick={() => setShowSettings(true)}
+          >
+            <Settings size={16} />
+          </button>
         </div>
 
         {/* Task selector */}
         <div style={{ width: '100%', maxWidth: 400 }}>
+          <label className="form-label" htmlFor="timer-task-select">Linked task</label>
           <div style={{ position: 'relative' }}>
             <select
+              id="timer-task-select"
               className="input"
               value={selectedTaskId}
               onChange={e => setSelectedTaskId(e.target.value)}
@@ -260,11 +265,12 @@ export default function Timer() {
 
         {/* Controls */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <button className="btn btn-ghost btn-icon" onClick={reset} title="Reset">
+          <button className="btn btn-ghost btn-icon" aria-label="Reset timer" onClick={reset} title="Reset">
             <RotateCcw size={18} />
           </button>
           <button
             className="timer-play-btn"
+            aria-label={running ? 'Pause timer' : 'Start timer'}
             style={{
               width: 72,
               height: 72,
@@ -282,7 +288,7 @@ export default function Timer() {
               : <Play size={26} style={{ marginLeft: 3 }} />
             }
           </button>
-          <button className="btn btn-ghost btn-icon" onClick={skip} title="Skip">
+          <button className="btn btn-ghost btn-icon" aria-label="Skip to next session" onClick={skip} title="Skip">
             <SkipForward size={18} />
           </button>
         </div>

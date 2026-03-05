@@ -38,10 +38,12 @@ export default function TimerRing({ progress, color, size = 260, strokeWidth = 1
           strokeDashoffset={offset}
           style={{ transition: 'stroke-dashoffset 1s linear' }}
         />
-        {/* Leading dot */}
-        {progress > 0.01 && progress < 0.99 && (
-          <circle cx={dotX} cy={dotY} r={strokeWidth * 0.65} fill={color} opacity={running ? 1 : 0.7} />
-        )}
+        {/* Leading dot — always rendered, opacity fades at edges */}
+        <circle
+          cx={dotX} cy={dotY} r={strokeWidth * 0.65} fill={color}
+          opacity={progress > 0.01 && progress < 0.99 ? (running ? 1 : 0.7) : 0}
+          style={{ transition: 'opacity 400ms ease' }}
+        />
       </svg>
     </div>
   )
