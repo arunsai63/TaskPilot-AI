@@ -4,8 +4,17 @@ import { motion } from 'framer-motion'
 import { useApp } from '../../context/AppContext'
 import { modalOverlayVariants, modalSheetVariants, modalCenterVariants } from '../../utils/animations'
 
+const THEMES = [
+  { id: 'kyoto-night',   name: 'Kyoto Night',   bg: '#0f0d0a', accent: '#9b8bc8' },
+  { id: 'washi-light',   name: 'Washi Light',   bg: '#f5f0e8', accent: '#b06020' },
+  { id: 'matcha-forest', name: 'Matcha Forest', bg: '#080e0a', accent: '#c8b060' },
+  { id: 'vermillion',    name: 'Vermillion',    bg: '#0e0b08', accent: '#c84030' },
+  { id: 'warm-amber',    name: 'Warm Amber',    bg: '#0d0907', accent: '#c89040' },
+  { id: 'slate-copper',  name: 'Slate + Copper', bg: '#090c0e', accent: '#b07050' },
+]
+
 export default function TimerSettings({ onClose }) {
-  const { timerSettings, updateTimerSettings } = useApp()
+  const { timerSettings, updateTimerSettings, theme, setTheme } = useApp()
   const [form, setForm] = useState({ ...timerSettings })
 
   const set = (key, value) => setForm(prev => ({ ...prev, [key]: value }))
@@ -44,6 +53,63 @@ export default function TimerSettings({ onClose }) {
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <div>
+            <label className="form-label">Theme</label>
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+              {THEMES.map(t => (
+                <button
+                  key={t.id}
+                  title={t.name}
+                  onClick={() => setTheme(t.id)}
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: 4,
+                    padding: 0,
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                  }}
+                >
+                  <div style={{
+                    width: 44,
+                    height: 32,
+                    borderRadius: 'var(--radius-sm)',
+                    background: t.bg,
+                    border: theme === t.id
+                      ? `2px solid ${t.accent}`
+                      : `2px solid transparent`,
+                    boxShadow: theme === t.id
+                      ? `0 0 0 1px ${t.accent}40`
+                      : `0 0 0 1px rgba(255,255,255,0.08)`,
+                    position: 'relative',
+                    overflow: 'hidden',
+                    transition: 'box-shadow 150ms, border-color 150ms',
+                  }}>
+                    <div style={{
+                      position: 'absolute',
+                      bottom: 5,
+                      left: 5,
+                      right: 5,
+                      height: 3,
+                      borderRadius: 2,
+                      background: t.accent,
+                    }} />
+                  </div>
+                  <span style={{
+                    fontSize: 10,
+                    color: theme === t.id ? 'var(--text-primary)' : 'var(--text-muted)',
+                    whiteSpace: 'nowrap',
+                    lineHeight: 1,
+                  }}>
+                    {t.name}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
+
           <div>
             <label className="form-label">Session Label</label>
             <input className="input" value={form.sessionLabel} onChange={e => set('sessionLabel', e.target.value)} placeholder="Focus Session" />

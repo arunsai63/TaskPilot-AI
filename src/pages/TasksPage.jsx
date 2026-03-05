@@ -7,6 +7,43 @@ import TaskForm from '../components/Tasks/TaskForm'
 import OrigamiCraneScene from '../components/OrigamiCraneScene'
 import KanjiMark from '../components/KanjiMark'
 
+function BambooGrove() {
+  const stalks = [
+    { x: 18,  h: 130, nodes: [100, 72, 44], leafDir: 1,  delay: '0s',    dur: '5s'   },
+    { x: 52,  h: 150, nodes: [118, 86, 54], leafDir: -1, delay: '1.3s',  dur: '4.2s' },
+    { x: 86,  h: 120, nodes: [92,  64, 38], leafDir: 1,  delay: '0.7s',  dur: '5.8s' },
+    { x: 116, h: 140, nodes: [108, 78, 48], leafDir: -1, delay: '2.1s',  dur: '4.8s' },
+  ]
+  return (
+    <svg
+      viewBox="0 0 140 160"
+      width={140}
+      aria-hidden="true"
+      style={{ position: 'absolute', right: 56, top: -10, opacity: 0.10, pointerEvents: 'none' }}
+    >
+      {stalks.map((s, si) => (
+        <g key={si} className="bamboo-leaf" style={{ animationDuration: s.dur, animationDelay: s.delay }}>
+          {/* Stalk */}
+          <line x1={s.x} y1={160} x2={s.x} y2={160 - s.h} stroke="var(--long-break-color)" strokeWidth="5" strokeLinecap="round" opacity="0.8" />
+          {/* Nodes */}
+          {s.nodes.map((ny, ni) => (
+            <rect key={ni} x={s.x - 4} y={ny} width="8" height="3" rx="1.5" fill="var(--long-break-color)" opacity="0.5" />
+          ))}
+          {/* Leaves */}
+          <path
+            d={`M${s.x} ${s.nodes[0] - 2} C${s.x + s.leafDir * 18} ${s.nodes[0] - 14}, ${s.x + s.leafDir * 32} ${s.nodes[0] - 8}, ${s.x + s.leafDir * 36} ${s.nodes[0] - 18}`}
+            stroke="var(--long-break-color)" strokeWidth="1.8" fill="none" strokeLinecap="round" opacity="0.6"
+          />
+          <path
+            d={`M${s.x} ${s.nodes[1] - 2} C${s.x - s.leafDir * 14} ${s.nodes[1] - 10}, ${s.x - s.leafDir * 28} ${s.nodes[1] - 6}, ${s.x - s.leafDir * 30} ${s.nodes[1] - 16}`}
+            stroke="var(--long-break-color)" strokeWidth="1.5" fill="none" strokeLinecap="round" opacity="0.5"
+          />
+        </g>
+      ))}
+    </svg>
+  )
+}
+
 const FILTERS = [
   { key: 'all', label: 'All' },
   { key: 'todo', label: 'To Do' },
@@ -44,7 +81,7 @@ export default function TasksPage() {
 
   return (
     <div style={{ maxWidth: 720, margin: '0 auto', padding: '24px 16px' }}>
-      <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
+      <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20, overflow: 'hidden' }}>
         <div>
           <h2 className="page-title">Tasks</h2>
           <p className="page-subtitle">{counts.todo} todo · {counts.in_progress} active · {counts.done} done</p>
@@ -52,6 +89,7 @@ export default function TasksPage() {
         <button className="btn btn-primary" onClick={() => setShowForm(true)}>
           <Plus size={15} /> New Task
         </button>
+        <BambooGrove />
         <KanjiMark char="務" size={72} style={{ position: 'absolute', right: 0, top: 0, color: 'var(--text-muted)', opacity: 0.7 }} />
       </div>
 

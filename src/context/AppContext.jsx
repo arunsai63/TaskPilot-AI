@@ -1,4 +1,4 @@
-import { createContext, useContext, useCallback } from 'react'
+import { createContext, useContext, useCallback, useEffect } from 'react'
 import { useLocalStorage } from '../hooks/useLocalStorage'
 import { generateId, getDayKey } from '../utils/format'
 
@@ -17,6 +17,16 @@ const DEFAULT_TIMER_SETTINGS = {
 }
 
 export function AppProvider({ children }) {
+  const [theme, setTheme] = useLocalStorage('theme', 'kyoto-night')
+
+  useEffect(() => {
+    if (theme === 'kyoto-night') {
+      document.documentElement.removeAttribute('data-theme')
+    } else {
+      document.documentElement.setAttribute('data-theme', theme)
+    }
+  }, [theme])
+
   const [tasks, setTasks] = useLocalStorage('tasks', [])
   const [timerSettings, setTimerSettings] = useLocalStorage('timerSettings', DEFAULT_TIMER_SETTINGS)
   const [sessions, setSessions] = useLocalStorage('sessions', [])
@@ -108,6 +118,7 @@ export function AppProvider({ children }) {
 
   return (
     <AppContext.Provider value={{
+      theme, setTheme,
       tasks, addTask, updateTask, deleteTask,
       timerSettings, updateTimerSettings,
       sessions, addSession,

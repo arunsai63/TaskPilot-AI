@@ -27,7 +27,7 @@ export default function TimerRing({ progress, color, size = 260, strokeWidth = 1
         {/* Track */}
         <circle
           cx={size / 2} cy={size / 2} r={radius}
-          fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth={strokeWidth}
+          fill="none" stroke="var(--ring-track)" strokeWidth={strokeWidth}
         />
         {/* Progress arc */}
         <circle

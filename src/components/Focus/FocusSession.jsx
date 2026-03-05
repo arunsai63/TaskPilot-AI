@@ -71,7 +71,7 @@ export default function FocusSession() {
             marginBottom: 16,
             fontVariantNumeric: 'tabular-nums',
             transition: 'color 300ms',
-            textShadow: running ? '0 0 40px rgba(196,158,216,0.4)' : 'none',
+            textShadow: running ? '0 0 40px var(--focus-glow)' : 'none',
             position: 'relative',
             zIndex: 1,
           }}>
@@ -133,8 +133,8 @@ export default function FocusSession() {
             style={{
               borderRadius: 'var(--radius-lg)',
               height: 56,
-              background: 'linear-gradient(135deg, var(--focus-color) 0%, #6b3d8a 100%)',
-              boxShadow: '0 4px 24px rgba(196,158,216,0.4)',
+              background: 'linear-gradient(135deg, var(--focus-color) 0%, var(--focus-dark) 100%)',
+              boxShadow: '0 4px 24px var(--focus-glow)',
               border: 'none',
               color: '#fff',
             }}

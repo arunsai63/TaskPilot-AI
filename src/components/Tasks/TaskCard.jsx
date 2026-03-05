@@ -19,8 +19,16 @@ export default function TaskCard({ task, index = 0 }) {
   const { updateTask, deleteTask } = useApp()
   const [expanded, setExpanded] = useState(false)
   const [editing, setEditing] = useState(false)
+  const [doneRing, setDoneRing] = useState(false)
 
-  const toggleDone = () => updateTask(task.id, { status: task.status === 'done' ? 'todo' : 'done' })
+  const toggleDone = () => {
+    const nextDone = task.status !== 'done'
+    updateTask(task.id, { status: nextDone ? 'done' : 'todo' })
+    if (nextDone) {
+      setDoneRing(true)
+      setTimeout(() => setDoneRing(false), 750)
+    }
+  }
   const overdue = isOverdue(task.dueDate) && task.status !== 'done'
 
   return (
@@ -41,12 +49,15 @@ export default function TaskCard({ task, index = 0 }) {
       >
         <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
           {/* Checkbox */}
-          <button
-            onClick={toggleDone}
-            className={`task-check ${task.status === 'done' ? 'done' : ''}`}
-          >
-            {task.status === 'done' && <Check size={12} color="#fff" />}
-          </button>
+          <div style={{ position: 'relative', flexShrink: 0, marginTop: 1 }}>
+            {doneRing && <div className="task-done-ring" />}
+            <button
+              onClick={toggleDone}
+              className={`task-check ${task.status === 'done' ? 'done' : ''}`}
+            >
+              {task.status === 'done' && <Check size={12} color="#fff" />}
+            </button>
+          </div>
 
           {/* Content */}
           <div style={{ flex: 1, minWidth: 0 }}>

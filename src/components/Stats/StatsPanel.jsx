@@ -35,6 +35,63 @@ function StatCard({ icon, label, value, rawValue, color, index }) {
   )
 }
 
+function KoiScene() {
+  return (
+    <svg
+      viewBox="0 0 440 60"
+      width="100%"
+      aria-hidden="true"
+      style={{ position: 'absolute', top: 0, left: 0, right: 0, opacity: 0.13, pointerEvents: 'none' }}
+    >
+      {/* Koi A — golden, faces right, swims left→right */}
+      <g className="koi-a">
+        <path d="M6 11 C14 3, 38 2, 50 11 C38 20, 14 19, 6 11Z" fill="var(--warning)" />
+        <path d="M50 11 L62 4 L64 11 L62 18Z" fill="var(--warning)" opacity="0.7" />
+        <path d="M18 7 C22 2, 30 2, 28 7Z" fill="var(--warning)" opacity="0.5" />
+        <circle cx="11" cy="11" r="2" fill="rgba(0,0,0,0.35)" />
+      </g>
+      {/* Koi B — sakura pink, faces left, swims right→left */}
+      <g className="koi-b">
+        <path d="M58 11 C50 3, 26 2, 14 11 C26 20, 50 19, 58 11Z" fill="var(--sakura)" />
+        <path d="M14 11 L2 4 L0 11 L2 18Z" fill="var(--sakura)" opacity="0.7" />
+        <path d="M46 7 C42 2, 34 2, 36 7Z" fill="var(--sakura)" opacity="0.5" />
+        <circle cx="53" cy="11" r="2" fill="rgba(0,0,0,0.35)" />
+      </g>
+    </svg>
+  )
+}
+
+function BrushDivider() {
+  return (
+    <svg
+      viewBox="0 0 440 16"
+      width="100%"
+      aria-hidden="true"
+      style={{ display: 'block', margin: '4px 0' }}
+    >
+      <path
+        d="M 4 9 C 60 5, 140 13, 220 8 C 300 3, 380 11, 436 7"
+        stroke="var(--accent)"
+        strokeWidth="1.4"
+        fill="none"
+        strokeLinecap="round"
+        pathLength="1"
+        className="brush-line"
+      />
+      <path
+        d="M 8 12 C 80 14, 200 9, 320 12 C 380 14, 420 10, 436 11"
+        stroke="var(--text-muted)"
+        strokeWidth="0.7"
+        fill="none"
+        strokeLinecap="round"
+        pathLength="1"
+        className="brush-line"
+        style={{ animationDelay: '0.7s' }}
+      />
+    </svg>
+  )
+}
+
 function MtFuji() {
   return (
     <svg
@@ -146,9 +203,12 @@ export default function StatsPanel() {
       </div>
 
       <div className="card" style={{ position: 'relative', overflow: 'hidden' }}>
+        <KoiScene />
         <MtFuji />
         <WeekHeatmap workLog={workLog} />
       </div>
+
+      <BrushDivider />
 
       <div className="card">
         <div className="section-label" style={{ marginBottom: 12 }}>Recent Sessions</div>
@@ -161,7 +221,7 @@ export default function StatsPanel() {
                 <div style={{
                   width: 10, height: 10, borderRadius: '50%', flexShrink: 0,
                   background: s.type === 'focus' ? 'var(--focus-color)' : s.type === 'short_break' ? 'var(--break-color)' : 'var(--long-break-color)',
-                  boxShadow: s.type === 'focus' ? '0 0 0 2px rgba(167,139,250,0.3)' : 'none',
+                  boxShadow: s.type === 'focus' ? '0 0 0 2px var(--focus-glow)' : 'none',
                 }} />
                 <span style={{ color: 'var(--text-secondary)', flex: 1 }}>
                   {s.type === 'focus' ? (s.label || 'Focus Session') : s.type === 'short_break' ? 'Short Break' : 'Long Break'}

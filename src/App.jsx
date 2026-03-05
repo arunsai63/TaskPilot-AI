@@ -41,14 +41,20 @@ const PETAL_PATH = 'M6,14 C2,10 0,7 0,5 C0,2 2,0 5,0 C5.5,0 6,0.3 6,0.3 C6,0.3 6
 
 function SakuraPetals() {
   const petals = [
-    { left: '7%',  delay: '0s',    dur: '16s', w: 10, h: 13, color: 'var(--sakura)',  tumbleDelay: '0s'    },
+    { left: '4%',  delay: '0s',    dur: '16s', w: 10, h: 13, color: 'var(--sakura)',  tumbleDelay: '0s'    },
+    { left: '11%', delay: '6.5s',  dur: '21s', w: 7,  h: 9,  color: 'var(--sakura)', tumbleDelay: '1.8s'  },
     { left: '19%', delay: '4.2s',  dur: '19s', w: 8,  h: 11, color: 'var(--hagi)',   tumbleDelay: '1.2s'  },
+    { left: '26%', delay: '11s',   dur: '14s', w: 9,  h: 12, color: 'var(--sakura)', tumbleDelay: '0.5s'  },
     { left: '33%', delay: '7.8s',  dur: '13s', w: 11, h: 14, color: 'var(--sakura)', tumbleDelay: '0.6s'  },
+    { left: '40%', delay: '3s',    dur: '22s', w: 7,  h: 9,  color: 'var(--hagi)',   tumbleDelay: '2.4s'  },
     { left: '44%', delay: '2.5s',  dur: '18s', w: 9,  h: 12, color: 'var(--sakura)', tumbleDelay: '2.1s'  },
     { left: '51%', delay: '1.8s',  dur: '17s', w: 8,  h: 10, color: 'var(--hagi)',   tumbleDelay: '0.9s'  },
+    { left: '57%', delay: '14s',   dur: '12s', w: 10, h: 13, color: 'var(--sakura)', tumbleDelay: '1.1s'  },
     { left: '60%', delay: '9s',    dur: '15s', w: 10, h: 13, color: 'var(--sakura)', tumbleDelay: '1.8s'  },
     { left: '65%', delay: '10s',   dur: '15s', w: 9,  h: 12, color: 'var(--sakura)', tumbleDelay: '0.3s'  },
+    { left: '72%', delay: '0.5s',  dur: '20s', w: 8,  h: 10, color: 'var(--hagi)',   tumbleDelay: '2.9s'  },
     { left: '79%', delay: '5.5s',  dur: '20s', w: 7,  h: 10, color: 'var(--sakura)', tumbleDelay: '2.7s'  },
+    { left: '84%', delay: '8s',    dur: '13s', w: 10, h: 13, color: 'var(--sakura)', tumbleDelay: '0.8s'  },
     { left: '87%', delay: '13.5s', dur: '16s', w: 9,  h: 12, color: 'var(--hagi)',   tumbleDelay: '1.5s'  },
     { left: '93%', delay: '12.5s', dur: '14s', w: 10, h: 13, color: 'var(--sakura)', tumbleDelay: '0.4s'  },
   ]

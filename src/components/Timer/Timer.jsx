@@ -8,16 +8,18 @@ import TimerRing from './TimerRing'
 import TimerSettings from './TimerSettings'
 import IncenseWisps from '../IncenseWisps'
 
-function MtFujiPausedScene() {
+function MtFujiPausedScene({ progress = 1, dim = false }) {
+  const moonCx = 60 + (1 - progress) * 200
+  const moonCy = 14 + (1 - progress) * 28
   return (
     <svg
       viewBox="0 0 520 152"
       width="100%"
       aria-hidden="true"
-      style={{ display: 'block', marginTop: 28, opacity: 0.088 }}
+      style={{ display: 'block', marginTop: 28, opacity: dim ? 0.07 : 0.088 }}
     >
-      <circle cx={438} cy={40} r={48} fill="var(--text-primary)" opacity={0.07} />
-      <circle cx={438} cy={40} r={29} fill="var(--text-primary)" opacity={0.55} />
+      <circle cx={moonCx} cy={moonCy} r={48} fill="var(--text-primary)" opacity={0.07} />
+      <circle cx={moonCx} cy={moonCy} r={29} fill="var(--text-primary)" opacity={0.55} />
       <path d="M0 152 L0 112 Q42 88 86 110 Q128 130 158 124 L158 152Z" fill="var(--accent)" opacity="0.45" />
       <path d="M362 124 Q402 112 448 130 Q492 148 520 134 L520 152 L362 152Z" fill="var(--accent)" opacity="0.4" />
       <path d="M260 14 C252 32, 218 80, 160 152 L360 152 C302 80 268 32 260 14Z" fill="var(--accent)" />
@@ -71,6 +73,81 @@ function ToriiBreakScene() {
       {/* Water shimmer lines below torii */}
       <line x1="110" y1="108" x2="210" y2="108" stroke="var(--break-color)" strokeWidth="1" opacity="0.3" />
       <line x1="125" y1="113" x2="195" y2="113" stroke="var(--break-color)" strokeWidth="0.7" opacity="0.2" />
+
+      {/* Fireflies */}
+      <circle cx={60}  cy={70} r={2.5} fill="rgba(255,235,140,0.85)" className="firefly-a" style={{ filter: 'drop-shadow(0 0 4px rgba(255,210,60,0.9))' }} />
+      <circle cx={140} cy={55} r={2.5} fill="rgba(255,235,140,0.85)" className="firefly-b" style={{ filter: 'drop-shadow(0 0 4px rgba(255,210,60,0.9))', animationDelay: '2s' }} />
+      <circle cx={220} cy={75} r={2.5} fill="rgba(255,235,140,0.85)" className="firefly-a" style={{ filter: 'drop-shadow(0 0 4px rgba(255,210,60,0.9))', animationDelay: '1.2s' }} />
+      <circle cx={270} cy={60} r={2.5} fill="rgba(255,235,140,0.85)" className="firefly-b" style={{ filter: 'drop-shadow(0 0 4px rgba(255,210,60,0.9))', animationDelay: '3.5s' }} />
+    </svg>
+  )
+}
+
+const RAIN_LINES = [
+  { x1: 10,  delay: 0.0,  dur: 1.3 },
+  { x1: 47,  delay: 0.1,  dur: 1.6 },
+  { x1: 83,  delay: 0.3,  dur: 1.1 },
+  { x1: 120, delay: 0.7,  dur: 1.8 },
+  { x1: 157, delay: 0.4,  dur: 1.4 },
+  { x1: 193, delay: 0.9,  dur: 1.2 },
+  { x1: 230, delay: 0.2,  dur: 1.7 },
+  { x1: 267, delay: 1.1,  dur: 1.5 },
+  { x1: 303, delay: 0.6,  dur: 1.1 },
+  { x1: 340, delay: 1.4,  dur: 1.6 },
+  { x1: 377, delay: 0.8,  dur: 1.3 },
+  { x1: 413, delay: 0.5,  dur: 1.8 },
+  { x1: 450, delay: 1.3,  dur: 1.2 },
+  { x1: 487, delay: 1.0,  dur: 1.4 },
+]
+
+function RainScene() {
+  return (
+    <svg
+      viewBox="0 0 520 152"
+      width="100%"
+      aria-hidden="true"
+      style={{ position: 'absolute', top: 0, left: 0, pointerEvents: 'none' }}
+    >
+      {RAIN_LINES.map((l, i) => (
+        <line
+          key={i}
+          x1={l.x1} y1={-10} x2={l.x1 + 4} y2={18}
+          stroke="rgba(180,200,220,0.6)"
+          strokeWidth={0.8}
+          strokeLinecap="round"
+          className="rain-streak"
+          style={{ animationDuration: l.dur + 's', animationDelay: l.delay + 's' }}
+        />
+      ))}
+    </svg>
+  )
+}
+
+function SessionLantern({ lit, pop }) {
+  const fill = lit ? 'var(--focus-color)' : 'var(--border)'
+  return (
+    <svg
+      viewBox="0 0 16 22"
+      width={16}
+      height={22}
+      aria-hidden="true"
+      style={{
+        opacity: lit ? 1 : 0.45,
+        animation: pop
+          ? 'dotPop 300ms var(--transition-bounce) both'
+          : lit
+            ? 'lanternGlow 4s alternate infinite'
+            : 'none',
+      }}
+    >
+      <rect x="6" y="0" width="4" height="2.5" rx="0.8" fill={fill} />
+      <line x1="8" y1="2.5" x2="8" y2="4" stroke={fill} strokeWidth="0.8" />
+      <rect x="2" y="4" width="12" height="13" rx="3" fill={fill} />
+      <line x1="3" y1="8"  x2="13" y2="8"  stroke="rgba(0,0,0,0.18)" strokeWidth="0.8" />
+      <line x1="3" y1="11" x2="13" y2="11" stroke="rgba(0,0,0,0.18)" strokeWidth="0.8" />
+      <line x1="3" y1="14" x2="13" y2="14" stroke="rgba(0,0,0,0.18)" strokeWidth="0.8" />
+      <rect x="5" y="17" width="6" height="2" rx="0.8" fill={fill} />
+      <line x1="8" y1="19" x2="8" y2="22" stroke={fill} strokeWidth="0.8" />
     </svg>
   )
 }
@@ -81,16 +158,16 @@ const MODES = [
   { key: 'long', label: 'Long Break', settingKey: 'longBreakDuration', color: 'var(--long-break-color)' },
 ]
 
-// Hardcoded rgba — CSS vars don't resolve inside SVG filter strings
+// CSS var strings — resolved by browser at paint time, theme-aware
 const MODE_GLOW = {
-  focus: 'rgba(196,158,216,0.32)',
-  short: 'rgba(128,184,200,0.25)',
-  long:  'rgba(144,196,160,0.25)',
+  focus: 'var(--focus-glow)',
+  short: 'var(--break-glow)',
+  long:  'var(--long-break-glow)',
 }
 const MODE_DARK = {
-  focus: '#6b3d8a',
-  short: '#1a5c6e',
-  long:  '#2d6e3e',
+  focus: 'var(--focus-dark)',
+  short: 'var(--break-dark)',
+  long:  'var(--long-break-dark)',
 }
 
 function playBeep(type = 'end') {
@@ -274,7 +351,7 @@ export default function Timer() {
               onChange={e => setSelectedTaskId(e.target.value)}
               style={{ paddingRight: 32 }}
             >
-              <option value="">No task linked</option>
+              <option value="">Free focus</option>
               {todoTasks.map(t => (
                 <option key={t.id} value={t.id}>{t.title}</option>
               ))}
@@ -316,18 +393,10 @@ export default function Timer() {
           </div>
         </div>
 
-        {/* Session dots */}
-        <div style={{ display: 'flex', gap: 6 }}>
+        {/* Session lanterns */}
+        <div style={{ display: 'flex', gap: 8, alignItems: 'flex-end' }}>
           {Array.from({ length: timerSettings.sessionsBeforeLongBreak }).map((_, i) => (
-            <div
-              key={i}
-              style={{
-                width: 8, height: 8, borderRadius: '50%',
-                background: i < completedInCycle ? 'var(--focus-color)' : 'var(--border)',
-                animation: justFilledIdx === i ? 'dotPop 300ms var(--transition-bounce) both' : 'none',
-                transition: 'background 300ms',
-              }}
-            />
+            <SessionLantern key={i} lit={i < completedInCycle} pop={justFilledIdx === i} />
           ))}
         </div>
 
@@ -370,12 +439,16 @@ export default function Timer() {
       <div style={{ width: '100%', maxWidth: 520 }}>
         {mode.key !== 'focus' ? (
           <ToriiBreakScene />
-        ) : running ? (
-          <div style={{ marginTop: 28, display: 'flex', justifyContent: 'center' }}>
-            <IncenseWisps running />
-          </div>
         ) : (
-          <MtFujiPausedScene />
+          <div style={{ position: 'relative', width: '100%' }}>
+            <MtFujiPausedScene progress={progress} dim={running} />
+            {running && <RainScene />}
+            {running && (
+              <div style={{ position: 'absolute', top: 28, left: '50%', transform: 'translateX(-50%)', pointerEvents: 'none' }}>
+                <IncenseWisps running />
+              </div>
+            )}
+          </div>
         )}
       </div>
     </div>
