@@ -5,7 +5,8 @@ import { useApp } from '../context/AppContext'
 import { useNotifications } from '../hooks/useNotifications'
 import ReminderCard from '../components/Reminders/ReminderCard'
 import ReminderForm from '../components/Reminders/ReminderForm'
-import SakuraBranch from '../components/SakuraBranch'
+import FloatingLantern from '../components/FloatingLantern'
+import KanjiMark from '../components/KanjiMark'
 
 export default function RemindersPage() {
   const { reminders } = useApp()
@@ -31,7 +32,7 @@ export default function RemindersPage() {
 
   return (
     <div style={{ maxWidth: 620, margin: '0 auto', padding: '24px 16px' }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
+      <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
         <div>
           <h2 className="page-title">Reminders</h2>
           <p className="page-subtitle">{upcoming.length} upcoming</p>
@@ -46,6 +47,7 @@ export default function RemindersPage() {
             <Plus size={15} /> New Reminder
           </button>
         </div>
+        <KanjiMark char="時" size={72} style={{ position: 'absolute', right: 0, top: 0, color: 'var(--text-muted)', opacity: 0.7 }} />
       </div>
 
       {permission === 'denied' && (
@@ -59,7 +61,7 @@ export default function RemindersPage() {
 
       {reminders.length === 0 ? (
         <div className="empty-state">
-          <SakuraBranch width={80} style={{ marginBottom: 8, opacity: 0.85 }} />
+          <FloatingLantern width={60} />
           <div style={{ fontWeight: 500 }}>No reminders yet</div>
           <div style={{ fontSize: 13 }}>Set reminders to stay on track.</div>
           <button className="btn btn-primary" onClick={() => setShowForm(true)}>

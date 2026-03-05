@@ -63,6 +63,7 @@
   --sakura:        #d490a8;
   --sakura-subtle: rgba(212, 144, 168, 0.08);
   --sakura-glow:   rgba(212, 144, 168, 0.25);
+  --hagi:          #c87cac;  /* 萩色 — bush clover / Japanese clover */
 
   /* Shadows — deeper, dramatic ink shadows */
   --shadow-xs:     0 1px 2px rgba(0,0,0,0.5), 0 0 0 1px rgba(220,200,245,0.04);
@@ -95,6 +96,19 @@
 
   /* Layout */
   --bottom-nav-height: 64px;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.028;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 300px 300px;
+  mix-blend-mode: overlay;
 }
 
 html, body {
@@ -532,6 +546,58 @@ textarea.input { resize: vertical; min-height: 80px; }
   transition: transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 .toggle.on::after { transform: translateX(18px); }
+
+/* Japanese decoration keyframes */
+@keyframes smokeDraw {
+  0%   { stroke-dashoffset: 120; opacity: 0; }
+  15%  { opacity: 0.55; }
+  80%  { opacity: 0.4; }
+  100% { stroke-dashoffset: 0; opacity: 0; }
+}
+@keyframes mistDrift {
+  0%, 100% { transform: translateX(0); }
+  50%       { transform: translateX(5px); }
+}
+@keyframes ensoDraw {
+  0%   { stroke-dashoffset: 497; opacity: 0; }
+  20%  { opacity: 0.35; }
+  100% { stroke-dashoffset: 0; opacity: 0.35; }
+}
+@keyframes ensoRipple {
+  0%   { transform: scale(1); opacity: 0.06; }
+  100% { transform: scale(1.22); opacity: 0; }
+}
+@keyframes lanternGlow {
+  0%   { filter: drop-shadow(0 0 6px rgba(212,168,112,0.35)); }
+  100% { filter: drop-shadow(0 0 14px rgba(212,168,112,0.65)); }
+}
+@keyframes waveShift {
+  0%, 100% { transform: translateX(0); }
+  50%       { transform: translateX(-8px); }
+}
+@keyframes inkExpand {
+  0%   { transform: scale(0.1); opacity: 0.5; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+@keyframes sakuraTumble {
+  0%   { transform: rotate(0deg); }
+  33%  { transform: rotate(45deg); }
+  66%  { transform: rotate(-20deg); }
+  100% { transform: rotate(60deg); }
+}
+
+/* Japanese decoration utilities */
+.smoke-wisp   { stroke-dasharray: 120; stroke-dashoffset: 120; }
+.smoke-wisp-1 { animation: smokeDraw 3.2s 0s   ease-in-out infinite; }
+.smoke-wisp-2 { animation: smokeDraw 3.2s 0.9s ease-in-out infinite; }
+.smoke-wisp-3 { animation: smokeDraw 3.2s 1.6s ease-in-out infinite; }
+.enso-draw    { stroke-dasharray: 497 68; stroke-dashoffset: 497;
+                animation: ensoDraw 2.4s cubic-bezier(0.25,0.46,0.45,0.94) forwards; }
+.enso-ripple  { animation: ensoRipple 3s ease-out infinite; }
+.lantern-glow { animation: emptyFloat 3.5s ease-in-out infinite,
+                            lanternGlow 4s ease-in-out infinite alternate; }
+.wave-shift   { animation: waveShift 12s ease-in-out infinite; }
+.mist-drift   { animation: mistDrift 8s ease-in-out infinite; }
 
 /* Desktop */
 @media (min-width: 768px) {

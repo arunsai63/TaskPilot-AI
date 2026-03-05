@@ -37,33 +37,41 @@ function InstallPrompt() {
   )
 }
 
+const PETAL_PATH = 'M6,14 C2,10 0,7 0,5 C0,2 2,0 5,0 C5.5,0 6,0.3 6,0.3 C6,0.3 6.5,0 7,0 C10,0 12,2 12,5 C12,7 10,10 6,14 Z'
+
 function SakuraPetals() {
   const petals = [
-    { left: '7%',  delay: '0s',    dur: '16s', size: 10 },
-    { left: '19%', delay: '4.2s',  dur: '19s', size: 7  },
-    { left: '33%', delay: '7.8s',  dur: '13s', size: 11 },
-    { left: '51%', delay: '1.8s',  dur: '17s', size: 8  },
-    { left: '65%', delay: '10s',   dur: '15s', size: 9  },
-    { left: '79%', delay: '5.5s',  dur: '20s', size: 7  },
-    { left: '93%', delay: '12.5s', dur: '14s', size: 10 },
+    { left: '7%',  delay: '0s',    dur: '16s', w: 10, h: 13, color: 'var(--sakura)',  tumbleDelay: '0s'    },
+    { left: '19%', delay: '4.2s',  dur: '19s', w: 8,  h: 11, color: 'var(--hagi)',   tumbleDelay: '1.2s'  },
+    { left: '33%', delay: '7.8s',  dur: '13s', w: 11, h: 14, color: 'var(--sakura)', tumbleDelay: '0.6s'  },
+    { left: '44%', delay: '2.5s',  dur: '18s', w: 9,  h: 12, color: 'var(--sakura)', tumbleDelay: '2.1s'  },
+    { left: '51%', delay: '1.8s',  dur: '17s', w: 8,  h: 10, color: 'var(--hagi)',   tumbleDelay: '0.9s'  },
+    { left: '60%', delay: '9s',    dur: '15s', w: 10, h: 13, color: 'var(--sakura)', tumbleDelay: '1.8s'  },
+    { left: '65%', delay: '10s',   dur: '15s', w: 9,  h: 12, color: 'var(--sakura)', tumbleDelay: '0.3s'  },
+    { left: '79%', delay: '5.5s',  dur: '20s', w: 7,  h: 10, color: 'var(--sakura)', tumbleDelay: '2.7s'  },
+    { left: '87%', delay: '13.5s', dur: '16s', w: 9,  h: 12, color: 'var(--hagi)',   tumbleDelay: '1.5s'  },
+    { left: '93%', delay: '12.5s', dur: '14s', w: 10, h: 13, color: 'var(--sakura)', tumbleDelay: '0.4s'  },
   ]
   return (
     <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 0, overflow: 'hidden' }}>
       {petals.map((p, i) => (
-        <div
+        <svg
           key={i}
+          viewBox="0 0 12 14"
+          width={p.w}
+          height={p.h}
+          aria-hidden="true"
           style={{
             position: 'absolute',
             top: '-20px',
             left: p.left,
-            width: p.size,
-            height: p.size * 1.3,
-            borderRadius: '50% 50% 50% 50% / 60% 60% 40% 40%',
-            background: 'var(--sakura)',
-            animation: `sakuraFall ${p.dur} ${p.delay} infinite linear`,
+            fill: p.color,
+            animation: `sakuraFall ${p.dur} ${p.delay} infinite linear, sakuraTumble 5s ${p.tumbleDelay} ease-in-out infinite`,
             willChange: 'transform, opacity',
           }}
-        />
+        >
+          <path d={PETAL_PATH} />
+        </svg>
       ))}
     </div>
   )

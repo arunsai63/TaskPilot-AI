@@ -1,6 +1,6 @@
 # Design System — Kyoto Night
 
-Theme: Midnight ink with wisteria accent. Deep `#0a0c10` backgrounds echo ink on washi paper. Surfaces use controlled translucency — glass with a warm violet tint in the borders rather than cold white. The accent is fuji/wisteria purple (藤色, `#9b8bc8`), a beloved traditional Japanese color, against warm kinari cream text (`#e4ddd0`) rather than generic cold blue-white.
+Theme: Midnight ink with wisteria accent. Deep sumi-ink charcoal backgrounds (`#0f0d0a`) echo ink on washi paper. Surfaces use controlled translucency — glass with a warm violet tint in the borders rather than cold white. The accent is fuji/wisteria purple (藤色, `#9b8bc8`), a beloved traditional Japanese color, against warm kinari cream text (`#e4ddd0`) rather than generic cold blue-white. A washi fiber grain texture (SVG `feTurbulence`) sits on `body::before` at 2.8% opacity, `mix-blend-mode: overlay`, for tactile paper depth.
 
 ---
 
@@ -74,6 +74,7 @@ Theme: Midnight ink with wisteria accent. Deep `#0a0c10` backgrounds echo ink on
 | `--sakura`      | `#d490a8`                   |
 | `--sakura-subtle`| `rgba(212, 144, 168, 0.08)`|
 | `--sakura-glow` | `rgba(212, 144, 168, 0.25)` |
+| `--hagi`        | `#c87cac`                   | 萩色 — bush clover / Japanese clover (petal variant) |
 
 ---
 
@@ -126,12 +127,17 @@ https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9.
 
 ## Background Texture
 
-The `body` has a subtle dot-grid pattern evocative of washi paper grain:
+Two-layer texture system:
+
+**1. Washi fiber grain (`body::before`)**
+SVG `feTurbulence` noise (fractalNoise, baseFrequency 0.72, 4 octaves) tiled at 300×300px. `opacity: 0.028`, `mix-blend-mode: overlay`, `position: fixed`, `z-index: 1`, `pointer-events: none`. Simulates washi paper fiber structure.
+
+**2. Dot grid (body `background-image`)**
 ```css
-background-image: radial-gradient(rgba(155, 139, 200, 0.025) 1px, transparent 1px);
-background-size: 28px 28px;
+radial-gradient(rgba(212, 168, 112, 0.022) 1px, transparent 1px)
+background-size: 28px 28px
 ```
-Dots are 2.5% opacity wisteria purple. Invisible in isolation, adds subtle tactile depth.
+Gold-tinted dots at 2.2% opacity. Adds subtle tactile grid. Two additional radial gradients overlay warm gold (top) and sakura pink (lower-left) ambient light zones.
 
 ---
 
@@ -150,13 +156,66 @@ box-shadow: var(--shadow-sm), inset 0 1px 0 rgba(255,255,255,0.07);
 ## Japanese Decorative Elements
 
 ### Floating Sakura Petals (`SakuraPetals` in App.jsx)
-7 petal-shaped divs, fixed position behind all content, `z-index: 0`, `pointer-events: none`. Opacity oscillates 0 → 0.042 → 0 over 13–20s. Each has a different `left` position and animation delay for random appearance. Uses `sakuraFall` keyframe with lateral translateX drift to simulate natural fall.
+10 SVG elements using a heart-notch petal path (`M6,14 C2,10 0,7 ...`), fixed position behind all content, `z-index: 0`, `pointer-events: none`. 8 petals use `--sakura`, 3 use `--hagi` for color variety. Each runs two compound animations: `sakuraFall` (lateral drift fall) + `sakuraTumble` (rotation rhythm) for 3D tumble effect. Durations 13–20s, staggered delays.
+
+### Timer Scene (state-reactive, inline in `Timer.jsx`)
+Three mutually exclusive scenes rendered below the timer controls, switching on `mode.key` and `running`:
+- **Focus + paused**: `MtFujiPausedScene` — Mt. Fuji silhouette with torii gate, moon, snow cap, and lake reflection. `opacity: 0.088`.
+- **Focus + running**: `IncenseWisps` — 3 rising smoke paths with `stroke-dashoffset` draw cycle. Centered, width 80.
+- **Break mode** (short or long): `ToriiBreakScene` — torii gate centered in misty mountain landscape with mist drift animation, water shimmer, and moon. `opacity: 0.09`.
+
+### Origami Crane (`OrigamiCraneScene` in `src/components/OrigamiCraneScene.jsx`)
+Tasks page empty state. Geometric crane perched on bamboo stalk. Bamboo has 3 nodes and 3 leaf strokes. Crane wings use `--accent`, body is `--text-primary` at low opacity. Crane group floats via `emptyFloat 4s infinite`; bamboo is stationary.
+
+### Floating Lantern (`FloatingLantern` in `src/components/FloatingLantern.jsx`)
+Reminders page empty state. Paper lantern with nested rects for depth, warm inner glow ellipse (`rgba(255,240,180,0.8)`), vertical ribs, tassel. Wrapper uses `.lantern-glow` class (float + glow-pulse via `lanternGlow` keyframe, alternates 4s).
+
+### Enso Ripple (`EnsoRipple` in `src/components/EnsoRipple.jsx`)
+Focus page — absolutely positioned 200×200 behind the stopwatch numerals. When `active`:
+- Outer ring pulses outward via `ensoRipple` (scale 1 → 1.22, fade out, 3s infinite)
+- Main enso circle draws in via `ensoDraw` (stroke-dashoffset 497 → 0, 2.4s forwards)
+- `key={active}` on the SVG forces animation replay each time a session starts
+- Fades in/out via `opacity` transition (600ms ease)
+
+### KanjiMark (`src/components/KanjiMark.jsx`)
+Reusable SVG kanji watermark. Font stack: `'Hiragino Kaku Gothic Pro', 'Yu Gothic', 'MS Gothic', serif`. `opacity: 0.055`, `pointer-events: none`. Gracefully invisible on devices without CJK fonts (fixed SVG dimensions prevent layout impact).
+
+Assignments per page:
+| Page      | Kanji | Reading  | Meaning               |
+|-----------|-------|----------|-----------------------|
+| Timer     | 集    | shuu     | concentration, gather |
+| Tasks     | 務    | mu       | duty, task            |
+| Focus     | 禅    | zen      | zen, meditation       |
+| Stats     | 績    | seki     | achievement, result   |
+| Reminders | 時    | toki     | time, moment          |
+
+### Wave Header (inline `WaveHeader` in StatsPage.jsx)
+SVG wave at top of Stats page. Two-layer: filled wave path + stroke outline, `--break-color`. Both paths use `.wave-shift` (slow 12s drift). `opacity: 0.07`.
 
 ### Mt. Fuji Silhouette (inline `MtFuji` in StatsPanel.jsx)
 SVG absolutely positioned at the bottom of the 7-day heatmap card, `opacity: 0.055`. Features: two flanking background peaks, Fuji's concave-slope body, snow cap with a ridgeline detail line. Color is `var(--accent)`.
 
-### Sakura Branch (`SakuraBranch` in `src/components/SakuraBranch.jsx`)
-Shared component used in TasksPage and RemindersPage empty states. Three branch strokes of decreasing weight (2.5px → 1.8px → 1.2px). Five five-petal flowers with circle clusters (petals at 72° intervals, distance 6.5×scale from center). Gold center dots use `var(--warning)`. Three scattered fallen petals as rotated ellipses at low opacity.
+### Incense Wisps (`IncenseWisps` in `src/components/IncenseWisps.jsx`)
+Renders `null` when `!running`. Three `<path>` elements using `pathLength="100"` and CSS class-driven `stroke-dashoffset` animation. Each wisp has a different delay (`smoke-wisp-1/2/3`) and curve direction. Incense stick and glowing ash tip included.
+
+---
+
+## Animation Keyframes (Japanese decorative set)
+
+Defined in `index.css`, before the desktop media query:
+
+| Keyframe       | Duration | Use                                               |
+|----------------|----------|---------------------------------------------------|
+| `smokeDraw`    | 3.2s ×3  | Incense wisp stroke draw/fade cycle               |
+| `mistDrift`    | 8s       | Mist band horizontal sway in ToriiBreakScene      |
+| `ensoDraw`     | 2.4s     | Enso circle stroke-dashoffset draw-in (forwards)  |
+| `ensoRipple`   | 3s       | Outer enso ring scale/fade pulse                  |
+| `lanternGlow`  | 4s alt   | Drop-shadow glow pulse on FloatingLantern         |
+| `waveShift`    | 12s      | Slow horizontal wave drift in WaveHeader          |
+| `inkExpand`    | —        | Reserved — ink splash expand (not yet used)       |
+| `sakuraTumble` | 5s       | Rotation rhythm for SVG petal compound animation  |
+
+CSS utility classes: `.smoke-wisp`, `.smoke-wisp-1/2/3`, `.enso-draw`, `.enso-ripple`, `.lantern-glow`, `.wave-shift`, `.mist-drift`.
 
 ---
 

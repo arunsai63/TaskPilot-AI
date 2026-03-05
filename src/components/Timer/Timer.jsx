@@ -6,6 +6,74 @@ import { useNotifications } from '../../hooks/useNotifications'
 import { formatTime } from '../../utils/format'
 import TimerRing from './TimerRing'
 import TimerSettings from './TimerSettings'
+import IncenseWisps from '../IncenseWisps'
+
+function MtFujiPausedScene() {
+  return (
+    <svg
+      viewBox="0 0 520 152"
+      width="100%"
+      aria-hidden="true"
+      style={{ display: 'block', marginTop: 28, opacity: 0.088 }}
+    >
+      <circle cx={438} cy={40} r={48} fill="var(--text-primary)" opacity={0.07} />
+      <circle cx={438} cy={40} r={29} fill="var(--text-primary)" opacity={0.55} />
+      <path d="M0 152 L0 112 Q42 88 86 110 Q128 130 158 124 L158 152Z" fill="var(--accent)" opacity="0.45" />
+      <path d="M362 124 Q402 112 448 130 Q492 148 520 134 L520 152 L362 152Z" fill="var(--accent)" opacity="0.4" />
+      <path d="M260 14 C252 32, 218 80, 160 152 L360 152 C302 80 268 32 260 14Z" fill="var(--accent)" />
+      <path d="M260 14 C257 26, 249 43, 237 62 L283 62 C271 43 263 26 260 14Z" fill="rgba(255,255,255,0.82)" />
+      <path d="M241 58 C249 39, 255 24, 260 14 C265 24, 271 39, 279 58" stroke="rgba(255,255,255,0.22)" strokeWidth="1" fill="none" />
+      <rect x="398" y="110" width="4.5" height="42" fill="var(--sakura)" opacity="0.78" />
+      <rect x="419" y="110" width="4.5" height="42" fill="var(--sakura)" opacity="0.78" />
+      <path d="M391 114 Q401 106 412 105 Q423 106 433 114" stroke="var(--sakura)" strokeWidth="4.5" fill="none" strokeLinecap="round" opacity="0.78" />
+      <line x1="398" y1="124" x2="423" y2="124" stroke="var(--sakura)" strokeWidth="2.5" opacity="0.72" />
+      <rect x="396" y="121" width="3" height="6" fill="var(--sakura)" opacity="0.6" />
+      <rect x="423" y="121" width="3" height="6" fill="var(--sakura)" opacity="0.6" />
+      <ellipse cx="260" cy="153" rx="72" ry="5" fill="var(--accent)" opacity="0.32" />
+      <line x1="204" y1="149" x2="316" y2="149" stroke="var(--accent)" strokeWidth="1" opacity="0.2" />
+      <line x1="218" y1="153" x2="302" y2="153" stroke="var(--accent)" strokeWidth="0.5" opacity="0.13" />
+    </svg>
+  )
+}
+
+function ToriiBreakScene() {
+  return (
+    <svg
+      viewBox="0 0 320 120"
+      width="100%"
+      aria-hidden="true"
+      style={{ display: 'block', marginTop: 28, opacity: 0.09 }}
+    >
+      {/* Misty mountain layers — receding planes */}
+      <path d="M0 120 L0 90 Q80 60 160 80 Q240 100 320 70 L320 120Z" fill="var(--break-color)" opacity="0.35" />
+      <path d="M0 120 L0 100 Q60 80 120 95 Q180 110 240 88 Q280 74 320 85 L320 120Z" fill="var(--break-color)" opacity="0.25" />
+
+      {/* Mist band */}
+      <rect x="0" y="82" width="320" height="12" fill="var(--text-primary)" opacity="0.04" className="mist-drift" />
+
+      {/* Moon */}
+      <circle cx="272" cy="28" r="22" fill="var(--text-primary)" opacity="0.06" />
+      <circle cx="272" cy="28" r="14" fill="var(--text-primary)" opacity="0.45" />
+
+      {/* Torii gate centered */}
+      {/* Left pillar */}
+      <rect x="130" y="52" width="5" height="68" fill="var(--sakura)" opacity="0.78" rx="1" />
+      {/* Right pillar */}
+      <rect x="185" y="52" width="5" height="68" fill="var(--sakura)" opacity="0.78" rx="1" />
+      {/* Kasagi — curved top beam */}
+      <path d="M120 60 Q132 48 160 46 Q188 48 200 60" stroke="var(--sakura)" strokeWidth="5.5" fill="none" strokeLinecap="round" opacity="0.78" />
+      {/* Nuki — second horizontal beam */}
+      <line x1="130" y1="74" x2="190" y2="74" stroke="var(--sakura)" strokeWidth="3" opacity="0.68" />
+      {/* Shimagi connector tabs */}
+      <rect x="127" y="70" width="4" height="8" fill="var(--sakura)" opacity="0.55" />
+      <rect x="189" y="70" width="4" height="8" fill="var(--sakura)" opacity="0.55" />
+
+      {/* Water shimmer lines below torii */}
+      <line x1="110" y1="108" x2="210" y2="108" stroke="var(--break-color)" strokeWidth="1" opacity="0.3" />
+      <line x1="125" y1="113" x2="195" y2="113" stroke="var(--break-color)" strokeWidth="0.7" opacity="0.2" />
+    </svg>
+  )
+}
 
 const MODES = [
   { key: 'focus', label: 'Focus', settingKey: 'focusDuration', color: 'var(--focus-color)' },
@@ -296,6 +364,19 @@ export default function Timer() {
         <AnimatePresence>
           {showSettings && <TimerSettings onClose={() => setShowSettings(false)} />}
         </AnimatePresence>
+      </div>
+
+      {/* Japanese scene — reactive to timer state */}
+      <div style={{ width: '100%', maxWidth: 520 }}>
+        {mode.key !== 'focus' ? (
+          <ToriiBreakScene />
+        ) : running ? (
+          <div style={{ marginTop: 28, display: 'flex', justifyContent: 'center' }}>
+            <IncenseWisps running />
+          </div>
+        ) : (
+          <MtFujiPausedScene />
+        )}
       </div>
     </div>
   )

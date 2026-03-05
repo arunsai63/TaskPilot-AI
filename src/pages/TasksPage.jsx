@@ -4,7 +4,8 @@ import { AnimatePresence } from 'framer-motion'
 import { useApp } from '../context/AppContext'
 import TaskCard from '../components/Tasks/TaskCard'
 import TaskForm from '../components/Tasks/TaskForm'
-import SakuraBranch from '../components/SakuraBranch'
+import OrigamiCraneScene from '../components/OrigamiCraneScene'
+import KanjiMark from '../components/KanjiMark'
 
 const FILTERS = [
   { key: 'all', label: 'All' },
@@ -43,7 +44,7 @@ export default function TasksPage() {
 
   return (
     <div style={{ maxWidth: 720, margin: '0 auto', padding: '24px 16px' }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
+      <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
         <div>
           <h2 className="page-title">Tasks</h2>
           <p className="page-subtitle">{counts.todo} todo · {counts.in_progress} active · {counts.done} done</p>
@@ -51,6 +52,7 @@ export default function TasksPage() {
         <button className="btn btn-primary" onClick={() => setShowForm(true)}>
           <Plus size={15} /> New Task
         </button>
+        <KanjiMark char="務" size={72} style={{ position: 'absolute', right: 0, top: 0, color: 'var(--text-muted)', opacity: 0.7 }} />
       </div>
 
       {/* Search + sort */}
@@ -83,7 +85,7 @@ export default function TasksPage() {
       {/* Task list */}
       {filtered.length === 0 ? (
         <div className="empty-state">
-          <SakuraBranch width={100} style={{ marginBottom: 8, opacity: 0.85 }} />
+          <OrigamiCraneScene width={160} />
           <div style={{ fontWeight: 500 }}>{tasks.length === 0 ? 'No tasks yet' : 'No matching tasks'}</div>
           <div style={{ fontSize: 13 }}>
             {tasks.length === 0 ? 'Create your first task to get started.' : 'Try adjusting your search or filter.'}

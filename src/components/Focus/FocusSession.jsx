@@ -3,6 +3,8 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { Play, Square, Clock } from 'lucide-react'
 import { useApp } from '../../context/AppContext'
 import { formatDuration, getDayKey } from '../../utils/format'
+import EnsoRipple from '../EnsoRipple'
+import KanjiMark from '../KanjiMark'
 
 export default function FocusSession() {
   const { tasks, addSession, workLog } = useApp()
@@ -52,21 +54,29 @@ export default function FocusSession() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-      <div className="card" style={{ textAlign: 'center', padding: '32px 20px' }}>
-        <div className="section-label" style={{ marginBottom: 20 }}>Free-form Focus Session</div>
-        <div style={{
-          fontFamily: "'DM Mono', 'JetBrains Mono', monospace",
-          fontSize: 80,
-          fontWeight: 500,
-          color: running ? 'var(--focus-color)' : 'var(--text-primary)',
-          letterSpacing: '-3px',
-          lineHeight: 1,
-          marginBottom: 16,
-          fontVariantNumeric: 'tabular-nums',
-          transition: 'color 300ms',
-          textShadow: running ? '0 0 40px rgba(196,158,216,0.4)' : 'none',
-        }}>
-          {display}
+      <div className="card" style={{ textAlign: 'center', padding: '32px 20px', position: 'relative' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
+          <div className="section-label">Free-form Focus Session</div>
+          <KanjiMark char="禅" size={48} style={{ color: 'var(--text-muted)', opacity: 0.7 }} />
+        </div>
+        <div style={{ position: 'relative', display: 'inline-block' }}>
+          <EnsoRipple active={running} />
+          <div style={{
+            fontFamily: "'DM Mono', 'JetBrains Mono', monospace",
+            fontSize: 80,
+            fontWeight: 500,
+            color: running ? 'var(--focus-color)' : 'var(--text-primary)',
+            letterSpacing: '-3px',
+            lineHeight: 1,
+            marginBottom: 16,
+            fontVariantNumeric: 'tabular-nums',
+            transition: 'color 300ms',
+            textShadow: running ? '0 0 40px rgba(196,158,216,0.4)' : 'none',
+            position: 'relative',
+            zIndex: 1,
+          }}>
+            {display}
+          </div>
         </div>
         {running && (
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, justifyContent: 'center', fontSize: 12, color: 'var(--text-muted)', marginBottom: 8 }}>

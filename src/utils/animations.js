@@ -42,3 +42,9 @@ export const statCardVariants = {
   hidden:  { opacity: 0, y: 12 },
   visible: (i) => ({ opacity: 1, y: 0, transition: { duration: 0.24, ease: EASE.out, delay: i * 0.06 } }),
 }
+
+export const inkRevealVariants = {
+  hidden:  { opacity: 0, y: 4 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] } },
+  exit:    { opacity: 0,       transition: { duration: 0.35, ease: 'easeIn' } },
+}
