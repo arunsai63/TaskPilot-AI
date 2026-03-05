@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
-import { Play, Square, Clock, Target } from 'lucide-react'
+import { Play, Square, Clock } from 'lucide-react'
 import { useApp } from '../../context/AppContext'
-import { formatDuration, formatTime, getDayKey } from '../../utils/format'
+import { formatDuration, getDayKey } from '../../utils/format'
 
 export default function FocusSession() {
   const { tasks, addSession, workLog } = useApp()
@@ -46,68 +46,87 @@ export default function FocusSession() {
   const mins = Math.floor((elapsed % 3600) / 60)
   const secs = elapsed % 60
   const display = hours > 0
-    ? `${String(hours).padStart(2,'0')}:${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`
-    : `${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`
+    ? `${String(hours).padStart(2, '0')}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`
+    : `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`
 
   return (
-    <div style={{ display:'flex', flexDirection:'column', gap:20 }}>
-      <div className="card" style={{ textAlign:'center' }}>
-        <div style={{ fontSize:11, color:'var(--text-muted)', textTransform:'uppercase', letterSpacing:'0.5px', marginBottom:16 }}>
-          Free-form Focus Session
-        </div>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+      <div className="card" style={{ textAlign: 'center', padding: '32px 20px' }}>
+        <div className="section-label" style={{ marginBottom: 20 }}>Free-form Focus Session</div>
         <div style={{
-          fontFamily:"'JetBrains Mono', monospace",
-          fontSize: 56,
+          fontFamily: "'DM Mono', 'JetBrains Mono', monospace",
+          fontSize: 80,
           fontWeight: 500,
           color: running ? 'var(--focus-color)' : 'var(--text-primary)',
-          letterSpacing: '-2px',
+          letterSpacing: '-3px',
           lineHeight: 1,
-          marginBottom: 8,
-          transition: 'color 300ms'
+          marginBottom: 16,
+          fontVariantNumeric: 'tabular-nums',
+          transition: 'color 300ms',
+          textShadow: running ? '0 0 40px rgba(196,158,216,0.4)' : 'none',
         }}>
           {display}
         </div>
-        {running && <div style={{ fontSize:12, color:'var(--text-muted)', marginBottom:16 }}>Session in progress...</div>}
+        {running && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, justifyContent: 'center', fontSize: 12, color: 'var(--text-muted)', marginBottom: 8 }}>
+            <span className="status-dot-pulse" />
+            Session in progress
+          </div>
+        )}
         {!running && elapsed === 0 && (
-          <div style={{ fontSize:12, color:'var(--text-muted)', marginBottom:16 }}>Ready to start</div>
+          <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 8 }}>Ready to start</div>
         )}
         {!running && elapsed > 0 && (
-          <div style={{ fontSize:12, color:'var(--success)', marginBottom:16 }}>
+          <div style={{ fontSize: 12, color: 'var(--success)', marginBottom: 8 }}>
             Session saved! {Math.floor(elapsed / 60)}m logged.
           </div>
         )}
       </div>
 
       {!running && (
-        <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
-          <input
-            className="input"
-            value={label}
-            onChange={e => setLabel(e.target.value)}
-            placeholder="Session label..."
-          />
-          <select className="input" value={selectedTaskId} onChange={e => setSelectedTaskId(e.target.value)}>
-            <option value="">No task linked</option>
-            {todoTasks.map(t => <option key={t.id} value={t.id}>{t.title}</option>)}
-          </select>
-          <input
-            className="input"
-            value={goal}
-            onChange={e => setGoal(e.target.value)}
-            placeholder="Session goal (optional)..."
-          />
+        <div className="card card-sm">
+          <div className="section-label" style={{ marginBottom: 12 }}>Session Setup</div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            <input
+              className="input"
+              value={label}
+              onChange={e => setLabel(e.target.value)}
+              placeholder="Session label..."
+            />
+            <select className="input" value={selectedTaskId} onChange={e => setSelectedTaskId(e.target.value)}>
+              <option value="">No task linked</option>
+              {todoTasks.map(t => <option key={t.id} value={t.id}>{t.title}</option>)}
+            </select>
+            <input
+              className="input"
+              value={goal}
+              onChange={e => setGoal(e.target.value)}
+              placeholder="Session goal (optional)..."
+            />
+          </div>
         </div>
       )}
 
-      <div style={{ display:'flex', gap:10 }}>
+      <div style={{ display: 'flex', gap: 10 }}>
         {!running ? (
-          <button className="btn btn-primary btn-lg w-full" onClick={start}>
+          <button
+            className="btn btn-lg w-full"
+            style={{
+              borderRadius: 'var(--radius-lg)',
+              height: 56,
+              background: 'linear-gradient(135deg, var(--focus-color) 0%, #6b3d8a 100%)',
+              boxShadow: '0 4px 24px rgba(196,158,216,0.4)',
+              border: 'none',
+              color: '#fff',
+            }}
+            onClick={start}
+          >
             <Play size={18} /> Start Session
           </button>
         ) : (
           <button
             className="btn btn-lg w-full"
-            style={{ background:'var(--danger-subtle)', color:'var(--danger)', borderColor:'var(--danger)' }}
+            style={{ background: 'var(--danger-subtle)', color: 'var(--danger)', borderColor: 'var(--danger)' }}
             onClick={stop}
           >
             <Square size={18} /> Stop & Save
@@ -115,11 +134,13 @@ export default function FocusSession() {
         )}
       </div>
 
-      <div className="card card-sm" style={{ display:'flex', alignItems:'center', gap:12 }}>
-        <Clock size={16} style={{ color:'var(--text-muted)', flexShrink:0 }} />
+      <div className="card card-sm" style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+        <div style={{ padding: 8, borderRadius: 'var(--radius-sm)', background: 'var(--accent-subtle)', color: 'var(--accent)', flexShrink: 0 }}>
+          <Clock size={16} />
+        </div>
         <div>
-          <div style={{ fontSize:13, fontWeight:500 }}>Today's total: {formatDuration(todayMinutes)}</div>
-          <div style={{ fontSize:12, color:'var(--text-muted)' }}>across all sessions</div>
+          <div style={{ fontSize: 20, fontWeight: 700, lineHeight: 1 }}>{formatDuration(todayMinutes)}</div>
+          <div className="section-label" style={{ marginTop: 4 }}>Today's total</div>
         </div>
       </div>
     </div>

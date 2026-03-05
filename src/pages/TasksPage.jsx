@@ -1,8 +1,10 @@
 import { useState } from 'react'
-import { Plus, Search, Filter, CheckCircle, Circle, Loader } from 'lucide-react'
+import { Plus, Search } from 'lucide-react'
+import { AnimatePresence } from 'framer-motion'
 import { useApp } from '../context/AppContext'
 import TaskCard from '../components/Tasks/TaskCard'
 import TaskForm from '../components/Tasks/TaskForm'
+import SakuraBranch from '../components/SakuraBranch'
 
 const FILTERS = [
   { key: 'all', label: 'All' },
@@ -27,8 +29,8 @@ export default function TasksPage() {
     t.description?.toLowerCase().includes(search.toLowerCase()) ||
     t.tags?.some(tag => tag.toLowerCase().includes(search.toLowerCase()))
   )
-  if (sortBy === 'priority') filtered = [...filtered].sort((a,b) => PRIORITY_ORDER[a.priority] - PRIORITY_ORDER[b.priority])
-  else if (sortBy === 'due') filtered = [...filtered].sort((a,b) => {
+  if (sortBy === 'priority') filtered = [...filtered].sort((a, b) => PRIORITY_ORDER[a.priority] - PRIORITY_ORDER[b.priority])
+  else if (sortBy === 'due') filtered = [...filtered].sort((a, b) => {
     if (!a.dueDate) return 1; if (!b.dueDate) return -1
     return new Date(a.dueDate) - new Date(b.dueDate)
   })
@@ -40,13 +42,11 @@ export default function TasksPage() {
   }
 
   return (
-    <div style={{ maxWidth:720, margin:'0 auto', padding:'24px 16px' }}>
-      <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:20 }}>
+    <div style={{ maxWidth: 720, margin: '0 auto', padding: '24px 16px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
         <div>
-          <h2 style={{ fontSize:18, fontWeight:600 }}>Tasks</h2>
-          <div style={{ fontSize:12, color:'var(--text-muted)', marginTop:2 }}>
-            {counts.todo} todo · {counts.in_progress} active · {counts.done} done
-          </div>
+          <h2 className="page-title">Tasks</h2>
+          <p className="page-subtitle">{counts.todo} todo · {counts.in_progress} active · {counts.done} done</p>
         </div>
         <button className="btn btn-primary" onClick={() => setShowForm(true)}>
           <Plus size={15} /> New Task
@@ -54,12 +54,12 @@ export default function TasksPage() {
       </div>
 
       {/* Search + sort */}
-      <div style={{ display:'flex', gap:8, marginBottom:14, flexWrap:'wrap' }}>
-        <div style={{ flex:1, minWidth:160, position:'relative' }}>
-          <Search size={14} style={{ position:'absolute', left:10, top:'50%', transform:'translateY(-50%)', color:'var(--text-muted)', pointerEvents:'none' }} />
-          <input className="input" value={search} onChange={e => setSearch(e.target.value)} placeholder="Search tasks..." style={{ paddingLeft:30 }} />
+      <div style={{ display: 'flex', gap: 8, marginBottom: 14, flexWrap: 'wrap' }}>
+        <div style={{ flex: 1, minWidth: 160, position: 'relative' }}>
+          <Search size={14} style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)', pointerEvents: 'none' }} />
+          <input className="input" value={search} onChange={e => setSearch(e.target.value)} placeholder="Search tasks..." style={{ paddingLeft: 30 }} />
         </div>
-        <select className="input" style={{ width:'auto' }} value={sortBy} onChange={e => setSortBy(e.target.value)}>
+        <select className="input" style={{ width: 'auto' }} value={sortBy} onChange={e => setSortBy(e.target.value)}>
           <option value="created">Newest</option>
           <option value="priority">Priority</option>
           <option value="due">Due date</option>
@@ -67,10 +67,15 @@ export default function TasksPage() {
       </div>
 
       {/* Filter tabs */}
-      <div className="tabs" style={{ marginBottom:16 }}>
+      <div className="mode-tabs" style={{ marginBottom: 16 }}>
         {FILTERS.map(f => (
-          <button key={f.key} className={`tab ${filter === f.key ? 'active' : ''}`} onClick={() => setFilter(f.key)}>
+          <button key={f.key} className={`mode-tab ${filter === f.key ? 'active' : ''}`} onClick={() => setFilter(f.key)}>
             {f.label}
+            {f.key !== 'all' && counts[f.key] > 0 && (
+              <span style={{ marginLeft: 4, fontSize: 11, background: 'var(--bg-elevated)', borderRadius: 'var(--radius-full)', padding: '1px 6px' }}>
+                {counts[f.key]}
+              </span>
+            )}
           </button>
         ))}
       </div>
@@ -78,9 +83,9 @@ export default function TasksPage() {
       {/* Task list */}
       {filtered.length === 0 ? (
         <div className="empty-state">
-          <CheckCircle size={36} />
-          <div style={{ fontWeight:500 }}>{tasks.length === 0 ? 'No tasks yet' : 'No matching tasks'}</div>
-          <div style={{ fontSize:13 }}>
+          <SakuraBranch width={100} style={{ marginBottom: 8, opacity: 0.85 }} />
+          <div style={{ fontWeight: 500 }}>{tasks.length === 0 ? 'No tasks yet' : 'No matching tasks'}</div>
+          <div style={{ fontSize: 13 }}>
             {tasks.length === 0 ? 'Create your first task to get started.' : 'Try adjusting your search or filter.'}
           </div>
           {tasks.length === 0 && (
@@ -90,12 +95,18 @@ export default function TasksPage() {
           )}
         </div>
       ) : (
-        <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
-          {filtered.map(task => <TaskCard key={task.id} task={task} />)}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <AnimatePresence>
+            {filtered.map((task, i) => (
+              <TaskCard key={task.id} task={task} index={i} />
+            ))}
+          </AnimatePresence>
         </div>
       )}
 
-      {showForm && <TaskForm onClose={() => setShowForm(false)} />}
+      <AnimatePresence>
+        {showForm && <TaskForm onClose={() => setShowForm(false)} />}
+      </AnimatePresence>
     </div>
   )
 }

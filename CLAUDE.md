@@ -48,6 +48,17 @@ UI components do not own business logic. Logic lives in context or hooks. A comp
 ### CSS
 Custom properties only — defined in `index.css`. No inline style objects for design decisions (spacing rhythm, colours, radii). Inline styles are acceptable for dynamic values only (widths driven by state, conditional colours, animation progress).
 
+Full design token reference: `docs/design-system.md`
+Animation system reference: `docs/animations.md`
+
+All framer-motion variant objects live in `src/utils/animations.js` — never define variant objects inside component files.
+
+### Keep documentation current
+Whenever architecture, conventions, or key decisions change, update CLAUDE.md and the relevant `docs/` file in the same commit.
+
+### Mobile-first
+All styles default to mobile (≤767px). Use `@media (min-width: 768px)` for desktop enhancements — never `max-width` media queries. Touch targets must be at least 36×36px. Input `font-size` must stay at `max(16px, ...)` to prevent iOS zoom. Bottom nav is the primary navigation; desktop side/top nav is an enhancement. Use `env(safe-area-inset-bottom)` wherever content may sit above the iOS home indicator.
+
 ---
 
 ## Project map

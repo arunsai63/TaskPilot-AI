@@ -6,23 +6,19 @@ export default function FocusPage() {
   const [mode, setMode] = useState('free')
 
   return (
-    <div style={{ maxWidth:520, margin:'0 auto', padding:'24px 16px' }}>
-      <h2 style={{ fontSize:18, fontWeight:600, marginBottom:16 }}>Focus Sessions</h2>
+    <div style={{ maxWidth: 520, margin: '0 auto', padding: '24px 16px' }}>
+      <h2 className="page-title" style={{ marginBottom: 16 }}>Focus Sessions</h2>
 
-      <div className="tabs" style={{ marginBottom:24 }}>
-        <button className={`tab ${mode === 'free' ? 'active' : ''}`} onClick={() => setMode('free')}>
+      <div className="mode-tabs" style={{ marginBottom: 24 }}>
+        <button className={`mode-tab ${mode === 'free' ? 'active' : ''}`} onClick={() => setMode('free')}>
           Free Session
         </button>
-        <button className={`tab ${mode === 'pomodoro' ? 'active' : ''}`} onClick={() => setMode('pomodoro')}>
+        <button className={`mode-tab ${mode === 'pomodoro' ? 'active' : ''}`} onClick={() => setMode('pomodoro')}>
           Pomodoro
         </button>
       </div>
 
-      {mode === 'free' ? <FocusSession /> : (
-        <div className="card" style={{ padding:32 }}>
-          <Timer />
-        </div>
-      )}
+      {mode === 'free' ? <FocusSession /> : <Timer />}
     </div>
   )
 }
